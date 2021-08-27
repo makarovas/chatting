@@ -9,14 +9,14 @@ const emitter = new events.EventEmitter();
 app.listen(PORT, () => console.log("go", PORT));
 
 app.use(cors());
-
-app.get("get-messages", (req, res) => {
-  emmiter.once("newMessage", (message) => {
+app.use(express.json());
+app.get("/get-messages", (req, res) => {
+  emitter.once("newMessage", (message) => {
     res.json(message);
   });
 });
 
-app.post("new-messages", (req, res) => {
+app.post("/new-messages", (req, res) => {
   const message = req.body;
   res.status(200);
   emitter.emit("newMessage", message);
