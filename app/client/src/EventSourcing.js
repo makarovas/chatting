@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-export const Longpulling = () => {
+export const EventSourcing = () => {
   const [messages, setMessages] = React.useState([]);
   console.log(messages);
   const [value, setValue] = React.useState("");
@@ -17,15 +17,13 @@ export const Longpulling = () => {
   }, []);
 
   const subcribe = async () => {
-    try {
-      const { data } = await axios.get("http://localhost:5000/get-messages");
-      //   setMessages((prev) => [...prev, data]);
-      setMessages((prev) => [data, ...prev]);
-      await subcribe();
-    } catch (err) {
-      //   setMessages("OOPS");
-      setTimeout(() => subcribe(), 10000);
-    }
+    const eventSource = new EventSource("http://localhost:5000/connect");
+    eventSource.onmessage = function (event) {
+      const message = JSON.parse(event.data);
+      console.log("JSON");
+
+      setMessages((prev) => [message, ...prev]);
+    };
   };
 
   return (
@@ -37,7 +35,7 @@ export const Longpulling = () => {
         onChange={(e) => setValue(e.target.value)}
       />
       <button type="submit" onClick={sendMessage}>
-        Loop
+        Source
       </button>
       <div>
         {messages.map((message, i) => (
