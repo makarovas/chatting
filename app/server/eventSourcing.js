@@ -18,6 +18,7 @@ app.get("/connect", (req, res) => {
   });
   emitter.on("newMessage", (message) => {
     res.write(`data: ${JSON.stringify(message)} \n\n`);
+    // res.write(message);
   });
 });
 

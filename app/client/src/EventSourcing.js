@@ -12,6 +12,7 @@ export const EventSourcing = () => {
       id: Date.now(),
     });
   };
+
   React.useEffect(() => {
     subcribe();
   }, []);
@@ -20,7 +21,7 @@ export const EventSourcing = () => {
     const eventSource = new EventSource("http://localhost:5000/connect");
     eventSource.onmessage = function (event) {
       const message = JSON.parse(event.data);
-      console.log("JSON");
+      console.log(event.data);
 
       setMessages((prev) => [message, ...prev]);
     };
